@@ -58,6 +58,6 @@ public class SoundManager : MonoBehaviour
 
     public void Save()
     {
-        PlayerPrefs.SetFloat("musicVolume", volumeSlider.value);
+        PlayerPrefs.SetFloat("musicVolume", volumeSlider.value);       
     }
 }

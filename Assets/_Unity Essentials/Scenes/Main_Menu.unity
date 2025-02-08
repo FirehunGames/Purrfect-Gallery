@@ -7831,6 +7831,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1217494044}
   - component: {fileID: 1217494045}
+  - component: {fileID: 1217494046}
   m_Layer: 5
   m_Name: Volume
   m_TagString: Untagged
@@ -7909,10 +7910,39 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1217494046}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: ChangeVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1217494046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217494043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc91f3b4b0dda440b8a3f5b6acabcbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSlider: {fileID: 1217494045}
+  icon: {fileID: 193865652}
+  volumeHigh: {fileID: 1054729987, guid: d235268fc84432446a27b6571176f616, type: 3}
+  volumeLow: {fileID: 216750932, guid: 1296f1ac5d65652469d4640520ff2fb0, type: 3}
+  volumeNull: {fileID: -807187943, guid: 314e809ef4148f54cb030e9e605cd004, type: 3}
 --- !u!1 &1219406952
 GameObject:
   m_ObjectHideFlags: 0
