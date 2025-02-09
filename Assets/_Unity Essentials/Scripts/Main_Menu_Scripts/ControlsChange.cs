@@ -25,6 +25,11 @@ public class ControlsChange : MonoBehaviour
         }
     }
 
+    /*public void Safe()
+    {
+        PlayerPrefs.GetString("controlKeys", key);
+    }*/
+
     // Update is called once per frame
     void Update()
     {

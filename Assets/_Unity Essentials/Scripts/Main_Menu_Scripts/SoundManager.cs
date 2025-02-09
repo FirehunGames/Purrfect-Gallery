@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     public Slider volumeSlider;
     public Image icon;
     public Sprite volumeHigh;
+    public Sprite volumeMid;
     public Sprite volumeLow;
     public Sprite volumeNull;
 
@@ -37,21 +38,26 @@ public class SoundManager : MonoBehaviour
 
     private void ChangeVolumeIcon(float volume)
     {
-        if (volume < 0.75f && volume > 0)
-        {
-            icon.sprite = volumeLow; // mid volume
-        }
-        else if (volume == 0)
+        if (volume == 0)
         {
             icon.sprite = volumeNull; // no volume
         }
+        else if (volume > 0.74f)
+        {
+            icon.sprite = volumeHigh; // high volume
+        }
+        else if (volume > 0.25f)
+        {
+            icon.sprite = volumeMid; // mid volume
+        }
         else
         {
-            icon.sprite = volumeHigh; // full volume
+            icon.sprite = volumeLow; // low volume
+
         }
     }
 
-    private void Load()
+        private void Load()
     {
         volumeSlider.value = PlayerPrefs.GetFloat("musicVolume");
     }
