@@ -18,6 +18,34 @@ public class ControlsChange : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        if (!PlayerPrefs.HasKey("up"))
+        {
+            PlayerPrefs.SetString("up", "W");
+            Load();
+        }
+        else
+        {
+            Load();
+        }
+        if (!PlayerPrefs.HasKey("left"))
+        {
+            PlayerPrefs.SetString("left", "A");
+        }
+        else
+        {
+            Load();
+        }
+        if (!PlayerPrefs.HasKey("left"))
+        {
+            PlayerPrefs.SetString("left", "A");
+        }
+        else
+        {
+            Load();
+        }
+        
+
         for (int i = 0; i < imageButtons.Length; i++)
         {
             int index = i; // Capture the current value of i
@@ -25,13 +53,35 @@ public class ControlsChange : MonoBehaviour
         }
     }
 
-    /*public void Safe()
+    public void LoadControls()
     {
-        PlayerPrefs.GetString("controlKeys", key);
-    }*/
 
-    // Update is called once per frame
-    void Update()
+    }
+
+    public void SaveControls(string key, int btn)
+    {
+        string prefKey = btn switch
+        {
+            0 => "up",
+            1 => "left",
+            2 => "down",
+            3 => "right",
+            4 => "jump",
+            5 => "run",
+            6 => "meow",
+            7 => "lookback",
+            _ => null
+        };
+
+        if (prefKey != null)
+        {
+            PlayerPrefs.SetString(prefKey, key);
+        }
+    }
+
+
+        // Update is called once per frame
+        void Update()
     {
         if (isWaitingForKey && Input.anyKeyDown)
         {
