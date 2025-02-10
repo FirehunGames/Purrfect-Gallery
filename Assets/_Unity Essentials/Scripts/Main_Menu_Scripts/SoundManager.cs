@@ -13,15 +13,7 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
-        if (!PlayerPrefs.HasKey("musicVolume"))
-        {
-            PlayerPrefs.SetFloat("musicVolume", 1);
-            Load();
-        }
-        else
-        {
-            Load();
-        }
+        Load();
 
         // Update the icon based on the initial volume
         ChangeVolumeIcon(volumeSlider.value);
@@ -59,11 +51,25 @@ public class SoundManager : MonoBehaviour
 
     private void Load()
     {
-        volumeSlider.value = PlayerPrefs.GetFloat("musicVolume");
+        if (!PlayerPrefs.HasKey("musicVolume"))
+        {
+            PlayerPrefs.SetFloat("musicVolume", 1);
+            Load();
+        }
+        else
+        {
+            volumeSlider.value = PlayerPrefs.GetFloat("musicVolume");
+        }       
     }
 
     public void Save()
     {
         PlayerPrefs.SetFloat("musicVolume", volumeSlider.value);       
+    }
+
+    public void ResetDefaultVolume()
+    {
+        PlayerPrefs.DeleteAll();
+        Load();
     }
 }
