@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ControlsChange : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class ControlsChange : MonoBehaviour
     private bool isWaitingForKey = false;
     public GameObject waitingPanel;
     private int currentButtonIndex = -1;
+    public TMP_Text waitingPanelText;
 
 
     void ChangeKey(int buttonIndex)
@@ -34,7 +36,7 @@ public class ControlsChange : MonoBehaviour
     public void ResetDefaultValues()
     {
         PlayerPrefs.DeleteAll();
-        LoadControls();       
+        LoadControls();
     }
 
     public string ButtonPressed(int btn)
@@ -44,7 +46,7 @@ public class ControlsChange : MonoBehaviour
         {
             0 => "up",
             1 => "left",
-            2 => "down", 
+            2 => "down",
             3 => "right",
             4 => "jump",
             5 => "run",
@@ -64,7 +66,7 @@ public class ControlsChange : MonoBehaviour
             1 => "A",
             2 => "S",
             3 => "D",
-            4 => "SPACE",
+            4 => "Space",
             5 => "LeftShift",
             6 => "F",
             7 => "Z",
@@ -89,7 +91,7 @@ public class ControlsChange : MonoBehaviour
                 buttonImages[i].sprite = newSprite;
                 RectTransform rt = buttonImages[i].GetComponent<RectTransform>();
 
-                if (value == "LeftShift-Key" || value == "LeftShift" || value == "SPACE" || value == "Space-Key")
+                if (value == "LeftShift-Key" || value == "LeftShift" || value == "SPACE" || value == "Space-Key" || value == "Space")
                 {
                     rt.sizeDelta = new Vector2(100, rt.sizeDelta.y); // Set width to 100
                 }
@@ -98,7 +100,7 @@ public class ControlsChange : MonoBehaviour
                     rt.sizeDelta = new Vector2(50, rt.sizeDelta.y); // Set width to 50
                 }
 
-                Debug.Log($"Loaded sprite for {keys}: {spriteName}");
+                //Debug.Log($"Loaded sprite for {keys}: {spriteName}");
             }
             else
             {
@@ -108,7 +110,7 @@ public class ControlsChange : MonoBehaviour
             if (!PlayerPrefs.HasKey(keys))
             {
                 PlayerPrefs.SetString(keys, defaultValues);
-                Debug.Log($"Default value set for {keys}: {defaultValues}");
+                //Debug.Log($"Default value set for {keys}: {defaultValues}");
             }
         }
     }
@@ -123,12 +125,12 @@ public class ControlsChange : MonoBehaviour
             PlayerPrefs.SetString(btnPressed, keybind);
         }
 
-        Debug.Log("boton presionado: " + btnPressed + "   tecla presionada: " + keybind);
-        Debug.Log(PlayerPrefs.GetString(btnPressed, keybind));
+        /*Debug.Log("boton presionado: " + btnPressed + "   tecla presionada: " + keybind);
+        Debug.Log(PlayerPrefs.GetString(btnPressed, keybind));*/
     }
 
 
-        // Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
         if (isWaitingForKey && Input.anyKeyDown)
@@ -139,6 +141,8 @@ public class ControlsChange : MonoBehaviour
                 {
                     Debug.Log("ESC pressed: Cancel key change");
                     isWaitingForKey = false;
+                    waitingPanel.SetActive(false);
+                    waitingPanelText.text = "Please select a new key from <br> A - Z, 0 - 9, Space and Shift";
                     break;
                 }
 
@@ -148,40 +152,65 @@ public class ControlsChange : MonoBehaviour
                      key == KeyCode.Space ||
                      key == KeyCode.LeftShift))
                 {
-                    
-                    isWaitingForKey = false;
 
-                    if (currentButtonIndex >= 0 && currentButtonIndex < buttonImages.Length)
+                    bool isDuplicateKey = false;
+
+                    for (int i = 0; i < controlBtn.Length; i++)
                     {
-                        // Construct the sprite name based on the key pressed
-                        string spriteName = key.ToString() + "-Key";
+                        string keys = ButtonPressed(i);
+                        string thisKey = key.ToString();
+                        string assignedKey = PlayerPrefs.GetString(keys);
 
-                        // Load the sprite by name from the Resources folder
-                        Sprite newSprite = Resources.Load<Sprite>(spriteName);
+                        //Debug.Log("Current set key: " + PlayerPrefs.GetString(keys) + " for the input: " + keys);
 
-                        if (newSprite != null)
+                        if (assignedKey == thisKey || assignedKey == thisKey + "-Key")
                         {
-                            buttonImages[currentButtonIndex].sprite = newSprite;
+                            isDuplicateKey = true;
+                            Debug.Log("Current set key: " + PlayerPrefs.GetString(keys) + " for the input: " + keys);
+                            waitingPanelText.text = thisKey + " is already assigned to the " + keys + " control <br><br> Please select another one";
+                            waitingPanel.SetActive(true);
+                            break;
+                        }
+                    }
+                    if (!isDuplicateKey)
+                    {
+                        isWaitingForKey = false;
 
-                            //call save() to playerprefs
-                            SaveControls(currentButtonIndex, spriteName);
+                        if (currentButtonIndex >= 0 && currentButtonIndex < buttonImages.Length)
+                        {
+                            
+                            // Construct the sprite name based on the key pressed
+                            string spriteName = key.ToString() + "-Key";
 
-                            // Adjust the image width based on the key pressed
-                            RectTransform rt = buttonImages[currentButtonIndex].GetComponent<RectTransform>();
-                            if (key == KeyCode.Space || key == KeyCode.LeftShift)
+                            // Load the sprite by name from the Resources folder
+                            Sprite newSprite = Resources.Load<Sprite>(spriteName);
+
+                            if (newSprite != null)
                             {
-                                rt.sizeDelta = new Vector2(100, rt.sizeDelta.y); // Set width to 100
+                                buttonImages[currentButtonIndex].sprite = newSprite;
+
+                                //call save() to playerprefs
+                                SaveControls(currentButtonIndex, spriteName);
+
+                                // Adjust the image width based on the key pressed
+                                RectTransform rt = buttonImages[currentButtonIndex].GetComponent<RectTransform>();
+                                if (key == KeyCode.Space || key == KeyCode.LeftShift)
+                                {
+                                    rt.sizeDelta = new Vector2(100, rt.sizeDelta.y); // Set width to 100
+                                }
+                                else
+                                {
+                                    rt.sizeDelta = new Vector2(50, rt.sizeDelta.y); // Set width to 50
+                                }
                             }
                             else
                             {
-                                rt.sizeDelta = new Vector2(50, rt.sizeDelta.y); // Set width to 50
+                                Debug.LogError("Sprite not found: " + spriteName);
+                                isWaitingForKey = false;
                             }
                         }
-                        else
-                        {
-                            Debug.LogError("Sprite not found: " + spriteName);
-                        }
                     }
+                    
 
                     break;
                 }
