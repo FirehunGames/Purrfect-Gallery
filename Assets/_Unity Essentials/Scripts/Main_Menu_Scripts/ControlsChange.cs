@@ -142,7 +142,7 @@ public class ControlsChange : MonoBehaviour
                     Debug.Log("ESC pressed: Cancel key change");
                     isWaitingForKey = false;
                     waitingPanel.SetActive(false);
-                    waitingPanelText.text = "Please select a new key from <br> A - Z, 0 - 9, Space and Shift";
+                    waitingPanelText.text = "Please select a new key from <br> A - Z, 0 - 9, Space and Shift<br><br>ESC to exit";
                     break;
                 }
 

@@ -2455,6 +2455,7 @@ MonoBehaviour:
   - {fileID: 168804752}
   - {fileID: 1229439960}
   waitingPanel: {fileID: 721993428}
+  waitingPanelText: {fileID: 659066404}
 --- !u!1 &249975107
 GameObject:
   m_ObjectHideFlags: 0
@@ -5071,7 +5072,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 300, y: 100}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &659066404
 MonoBehaviour:
@@ -5093,9 +5094,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Please select a new key
-
-    A-Z only'
+  m_text: "Select a new key\nA-Z, 0-9, Space or Shift \n\nESC to exit"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b0c3491f45b9f4f43a054f1ac038bd67, type: 2}
   m_sharedMaterial: {fileID: 21976234817437650, guid: b0c3491f45b9f4f43a054f1ac038bd67,
