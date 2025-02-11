@@ -8,6 +8,9 @@ public class PlayRandomMeowOnF : MonoBehaviour
     private bool canMeow = true;
     private int meowCooldown = 1;
 
+    private KeyCode meowKey;
+    private string meowString;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -15,7 +18,15 @@ public class PlayRandomMeowOnF : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && canMeow)
+        meowString = PlayerPrefs.GetString("meow");
+
+        if (meowString.EndsWith("-Key"))
+        {
+            meowString = meowString.Substring(0, meowString.Length - 4); // Remove the last 4 characters ("-Key")
+        }
+        meowKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), meowString);
+
+        if (Input.GetKey(meowKey) && canMeow)
         {
             int randomIndex = Random.Range(0, soundClips.Length);
             audioSource.PlayOneShot(soundClips[randomIndex]);

@@ -13,42 +13,55 @@ public class PlayerController : MonoBehaviour
     private Animator animator; // Reference to player's Animator.
     private bool canJump = true; // Flag to control jump cooldown.
 
-    public Camera mainCamera; //Reference to the main camera
-    public Camera frontCamera; //Reference to the front camera
+    public Camera mainCamera; // Reference to the main camera
+    public Camera frontCamera; // Reference to the front camera
 
-    //Purr settings
-    /*public AudioClip audioClip;
-    private AudioSource audioSource;
-    private bool canPurr = true;
-    public int purrCooldown = 7;*/
+    private KeyCode runKey;
+    private KeyCode jumpKey;
+    private KeyCode lookBackKey;
+
+    public GameObject mainMenu;
+    public GameObject optionsPanel;
+
+    public Vector3 respawnPosition = new Vector3(-10.527f, 0.037f, -10.934f);
 
     // Start is called before the first frame update
     private void Start()
     {
         rb = GetComponent<Rigidbody>(); // Access player's Rigidbody.
         animator = GetComponent<Animator>(); // Access player's Animator.
-        /*AudioSource[] audioSources = GetComponents<AudioSource>();
-        audioSource = audioSources[1];*/
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetButtonDown("Jump") && canJump)
+        // Open and Close Main Menu
+        if (Input.GetKeyDown(KeyCode.Escape) && !optionsPanel.activeSelf)
+        {
+            mainMenu.gameObject.SetActive(!mainMenu.gameObject.activeSelf);
+        }
+
+        // Stop player actions if main menu or options panel is active
+        if (mainMenu.activeSelf || optionsPanel.activeSelf)
+        {
+            return;
+        }
+
+        runKey = GetKeyCodeFromPlayerPrefs("run");
+        jumpKey = GetKeyCodeFromPlayerPrefs("jump");
+        lookBackKey = GetKeyCodeFromPlayerPrefs("lookback");
+
+        if (Input.GetKeyDown(jumpKey) && canJump)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             StartCoroutine(JumpCooldown());
-            //animator.SetFloat("Fast", 1);
         }
-        //if (Input.GetButtonUp("Jump")){
-        //    animator.SetFloat("Fast", 0);
-        //}
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(lookBackKey))
         {
             SwitchToFrontCamera(false, true);
         }
-        else if (Input.GetKeyUp(KeyCode.Z))
+        else if (Input.GetKeyUp(lookBackKey))
         {
             SwitchToFrontCamera(true, false);
         }
@@ -56,39 +69,36 @@ public class PlayerController : MonoBehaviour
         // Update the isWalking parameter based on player movement input
         float moveVertical = Input.GetAxis("Vertical");
         bool isWalking = Mathf.Abs(moveVertical) > 0.1f; // Adjust threshold as needed
-        //animator.SetBool("isWalking", isWalking);
 
-        //Animations
-        if(isWalking == false)
+        // Animations
+        if (isWalking == false)
         {
-            //idle
+            // Idle
             animator.SetFloat("Speed", 0);
-            /*canPurr = false;
-            StartCoroutine(PurrCooldown());*/
-            
-            
         }
-        else if (!Input.GetKey(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.LeftShift))
+        else if (!Input.GetKey(runKey) || Input.GetKeyUp(runKey))
         {
-            //walk
+            // Walk
             animator.SetFloat("Speed", 0.3f);
             speed = 1f;
-            /*canPurr = false;
-            audioSource.Stop();*/
         }
-        else if (Input.GetKey(KeyCode.LeftShift))
+        else if (Input.GetKey(runKey)) // Input.GetKey(KeyCode.LeftShift)
         {
-            //run
+            // Run
             animator.SetFloat("Speed", 1);
             speed = 2f;
-            /*canPurr = false;
-            audioSource.Stop();*/
-        }       
+        }
     }
 
     // Handle physics-based movement and rotation.
     private void FixedUpdate()
     {
+        // Stop player actions if main menu or options panel is active
+        if (mainMenu.activeSelf || optionsPanel.activeSelf)
+        {
+            return;
+        }
+
         // Move player based on vertical input.
         float moveVertical = Input.GetAxis("Vertical");
         Vector3 movement = transform.forward * moveVertical * speed * Time.fixedDeltaTime;
@@ -106,16 +116,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(jumpCooldown);
         canJump = true;
     }
-    /*private IEnumerator PurrCooldown()
-    {
-        canPurr = true;
-        yield return new WaitForSeconds(purrCooldown);
-        if (canPurr)
-        {
-            audioSource.PlayOneShot(audioClip);
-        }
-        
-    }*/
 
     private void SwitchToFrontCamera(bool mainCameraOn, bool frontCameraOn)
     {
@@ -130,4 +130,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    KeyCode GetKeyCodeFromPlayerPrefs(string keyName)
+    {
+        string keyString = PlayerPrefs.GetString(keyName);
+
+        if (keyString.EndsWith("-Key"))
+        {
+            keyString = keyString.Substring(0, keyString.Length - 4); // Remove the last 4 characters ("-Key")
+        }
+
+        return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyString);
+    }
+
+    public void RespawnPlayer()
+    {
+        //Respawn at start coordinates
+        transform.position = respawnPosition;
+    }
 }

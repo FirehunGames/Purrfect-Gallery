@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class ControlsChange : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class ControlsChange : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //PlayerPrefs.DeleteAll();
         LoadControls();
 
         GameObject soundManagerObject = GameObject.Find("Volume");
@@ -82,6 +82,7 @@ public class ControlsChange : MonoBehaviour
             string keys = ButtonPressed(i);
             string defaultValues = DefaultKeybinds(i);
             string value = PlayerPrefs.HasKey(keys) ? PlayerPrefs.GetString(keys) : defaultValues;
+            List<string> resizeKeys = new List<string> { "LeftShift-Key", "LeftShift", "SPACE", "Space-Key", "Space" };
 
             string spriteName = value.EndsWith("-Key") ? value : value + "-Key";
             Sprite newSprite = Resources.Load<Sprite>(spriteName);
@@ -91,7 +92,7 @@ public class ControlsChange : MonoBehaviour
                 buttonImages[i].sprite = newSprite;
                 RectTransform rt = buttonImages[i].GetComponent<RectTransform>();
 
-                if (value == "LeftShift-Key" || value == "LeftShift" || value == "SPACE" || value == "Space-Key" || value == "Space")
+                if (resizeKeys.Contains(value))
                 {
                     rt.sizeDelta = new Vector2(100, rt.sizeDelta.y); // Set width to 100
                 }
@@ -142,7 +143,7 @@ public class ControlsChange : MonoBehaviour
                     Debug.Log("ESC pressed: Cancel key change");
                     isWaitingForKey = false;
                     waitingPanel.SetActive(false);
-                    waitingPanelText.text = "Please select a new key from <br> A - Z, 0 - 9, Space and Shift<br><br>ESC to exit";
+                    waitingPanelText.text = "Select a new key <br>A - Z, 0 - 9, Space or Shift<br><br>ESC to exit";
                     break;
                 }
 
@@ -188,7 +189,7 @@ public class ControlsChange : MonoBehaviour
                             if (newSprite != null)
                             {
                                 buttonImages[currentButtonIndex].sprite = newSprite;
-
+                                waitingPanelText.text = "Select a new key <br>A - Z, 0 - 9, Space or Shift<br><br>ESC to exit";
                                 //call save() to playerprefs
                                 SaveControls(currentButtonIndex, spriteName);
 
