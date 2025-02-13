@@ -12,9 +12,15 @@ public class ControlsChange : MonoBehaviour
     private int currentButtonIndex = -1;
     public TMP_Text waitingPanelText;
 
-
     void ChangeKey(int buttonIndex)
     {
+        // Ensure the first four buttons do not trigger any actions
+        if (buttonIndex < 4)
+        {
+            Debug.Log("Button " + buttonIndex + " should not trigger any actions.");
+            return;
+        }
+
         isWaitingForKey = true;
         currentButtonIndex = buttonIndex;
     }
@@ -126,10 +132,7 @@ public class ControlsChange : MonoBehaviour
             PlayerPrefs.SetString(btnPressed, keybind);
         }
 
-        /*Debug.Log("boton presionado: " + btnPressed + "   tecla presionada: " + keybind);
-        Debug.Log(PlayerPrefs.GetString(btnPressed, keybind));*/
     }
-
 
     // Update is called once per frame
     void Update()
@@ -179,7 +182,6 @@ public class ControlsChange : MonoBehaviour
 
                         if (currentButtonIndex >= 0 && currentButtonIndex < buttonImages.Length)
                         {
-                            
                             // Construct the sprite name based on the key pressed
                             string spriteName = key.ToString() + "-Key";
 
@@ -211,8 +213,6 @@ public class ControlsChange : MonoBehaviour
                             }
                         }
                     }
-                    
-
                     break;
                 }
             }
