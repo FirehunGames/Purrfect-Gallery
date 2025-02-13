@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public GameObject mainMenu;
     public GameObject optionsPanel;
 
+    public string runButton = "Fire3";
+
     public Vector3 respawnPosition = new Vector3(-10.527f, 0.037f, -10.934f);
 
     // Start is called before the first frame update
@@ -36,9 +38,13 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Open and Close Main Menu
-        if (Input.GetKeyDown(KeyCode.Escape) && !optionsPanel.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape) && !optionsPanel.activeSelf || Input.GetButtonDown("Start") && !optionsPanel.activeSelf)
         {
             mainMenu.gameObject.SetActive(!mainMenu.gameObject.activeSelf);
+        }
+        if (Input.GetButton("Fire2") && mainMenu.activeSelf)
+        {
+            mainMenu.SetActive(false);
         }
 
         // Stop player actions if main menu or options panel is active
@@ -51,17 +57,17 @@ public class PlayerController : MonoBehaviour
         jumpKey = GetKeyCodeFromPlayerPrefs("jump");
         lookBackKey = GetKeyCodeFromPlayerPrefs("lookback");
 
-        if (Input.GetKeyDown(jumpKey) && canJump)
+        if (Input.GetKeyDown(jumpKey) && canJump || Input.GetButtonDown("Fire1") && canJump)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             StartCoroutine(JumpCooldown());
         }
 
-        if (Input.GetKeyDown(lookBackKey))
+        if (Input.GetKeyDown(lookBackKey) || Input.GetButtonDown("Fire4"))
         {
             SwitchToFrontCamera(false, true);
         }
-        else if (Input.GetKeyUp(lookBackKey))
+        else if (Input.GetKeyUp(lookBackKey) || Input.GetButtonUp("Fire4"))
         {
             SwitchToFrontCamera(true, false);
         }
@@ -76,22 +82,33 @@ public class PlayerController : MonoBehaviour
             // Idle
             animator.SetFloat("Speed", 0);
         }
-        else if (!Input.GetKey(runKey) || Input.GetKeyUp(runKey))
+        else if (!Input.GetKey(runKey) || Input.GetKeyUp(runKey) || Input.GetButtonUp(runButton))
         {
             // Walk
             animator.SetFloat("Speed", 0.3f);
             speed = 1f;
         }
-        else if (Input.GetKey(runKey)) // Input.GetKey(KeyCode.LeftShift)
+        else if (Input.GetKey(runKey) || Input.GetButtonDown(runButton))  // Input.GetKey(KeyCode.LeftShift)
         {
             // Run
             animator.SetFloat("Speed", 1);
             speed = 2f;
+            Debug.Log("Fire3 should be running");
         }
+
+        // Input with controller
+        if (Input.GetButton("Fire3"))
+        {
+            Debug.Log("Fire3 button pressed - should be running");
+            animator.SetFloat("Speed", 1);
+            speed = 2f;
+        }
+        
+
     }
 
-    // Handle physics-based movement and rotation.
-    private void FixedUpdate()
+        // Handle physics-based movement and rotation.
+        private void FixedUpdate()
     {
         // Stop player actions if main menu or options panel is active
         if (mainMenu.activeSelf || optionsPanel.activeSelf)

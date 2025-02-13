@@ -26,7 +26,7 @@ public class PlayRandomMeowOnF : MonoBehaviour
         }
         meowKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), meowString);
 
-        if (Input.GetKey(meowKey) && canMeow)
+        if (Input.GetKey(meowKey) && canMeow || Input.GetButtonDown("Fire2") && canMeow)
         {
             int randomIndex = Random.Range(0, soundClips.Length);
             audioSource.PlayOneShot(soundClips[randomIndex]);

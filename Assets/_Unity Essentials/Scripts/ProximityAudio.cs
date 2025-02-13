@@ -34,6 +34,10 @@ public class ProximityAudio : MonoBehaviour
                 {
                     audioSource.Play();
                 }
+
+                // Calculate the volume based on the distance
+                float t = Mathf.InverseLerp(minDistance, maxDistance, distance);
+                audioSource.volume = Mathf.Lerp(1f, 0f, t); // Gradually increase volume from 0 to 1
             }
             else
             {
