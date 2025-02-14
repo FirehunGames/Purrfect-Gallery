@@ -17063,7 +17063,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: b43b0bbe4ba0ec64a8b1fed7e3bfccd2, type: 2}
+      objectReference: {fileID: 2100000, guid: 5366d3ffef3c93d42a877bdee1969b53, type: 2}
     - target: {fileID: 7761335903355219873, guid: 9d0d81f8343159e438b00e98ff8a7e0b,
         type: 3}
       propertyPath: m_Name
@@ -19164,6 +19164,8 @@ MonoBehaviour:
   mainMenu: {fileID: 391370702}
   defaultButton: {fileID: 380173823}
   sliderToSelect: {fileID: 1152817572}
+  difficulty: {fileID: 0}
+  easyButton: {fileID: 0}
 --- !u!4 &895390372
 Transform:
   m_ObjectHideFlags: 0
